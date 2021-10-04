@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -14,20 +13,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.cheggclone.ui.theme.CheggCloneTheme
+import com.example.cheggclone.models.DECK_ADDED
+import com.example.cheggclone.models.DECK_CREATED
+import com.example.cheggclone.models.Deck
+import com.example.cheggclone.models.SampleDataSet
 import com.example.cheggclone.ui.theme.DeepOrange
 
 
@@ -35,34 +33,55 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            HomeScreen()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun HomeScreen() {
+    var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
+            ) {
+                Text(
+                    text = "CheggPrep",
+                    style = MaterialTheme.typography.h5,
+                    color = DeepOrange,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                FilterSection(selectedFilterIndex, setFilterIndex)
+            }
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
+            when(selectedFilterIndex) {
+                0 -> SampleDataSet.deckSample.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                    }
+                }
+                1 -> SampleDataSet.deckSample.filter {it.bookmarked}.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                    }
+                }
+                2 -> SampleDataSet.deckSample.filter {it.deckType == DECK_CREATED}.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                    }
+                }
+            }
 
-@Composable
-fun DefaultPreview() {
-    Column(modifier = Modifier.padding(8.dp)) {
-        DeckInSubject()
-        Spacer(modifier = Modifier.height(8.dp))
-        StudyGuide()
-        Spacer(modifier = Modifier.height(8.dp))
-        DeckItem()
-        Spacer(modifier = Modifier.height(8.dp))
-        MyDeckItem()
-        Spacer(modifier = Modifier.height(8.dp))
-        MakeMyDeck()
-        Spacer(modifier = Modifier.height(8.dp))
-        SubjectItem()
-        Spacer(modifier = Modifier.height(8.dp))
-        CardItem()
+
+        }
     }
 }
+
 
 @Composable
 fun DeckInSubject() {
@@ -121,21 +140,19 @@ fun StudyGuide() {
 }
 
 @Composable
-fun DeckItem() {
+fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 2.dp,
                 color = Color.LightGray
             )
-            .clickable {
-
-            }
+            .clickable { }
             .padding(16.dp)
     ) {
         Text(
-            text = "recursion",
+            text = deck.deckTitle,
             style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold
         )
@@ -145,16 +162,38 @@ fun DeckItem() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "8 Cards",
+                text = deck.cardList.size.toString() +
+                        if(deck.cardList.size > 1) " Cards" else " Card",
                 style = MaterialTheme.typography.subtitle1,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray
             )
-            Icon(
-                imageVector = Icons.Default.Bookmark,
-                contentDescription = "bookmark",
-                tint = Color.Gray
-            )
+            when(deck.deckType) {
+                DECK_CREATED -> {
+                    if(deck.shared) {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = "shared",
+                            tint = Color.Gray
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = "not shared",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+                DECK_ADDED -> {
+                    if(deck.bookmarked) {
+                        Icon(
+                            imageVector = Icons.Default.Bookmark,
+                            contentDescription = "bookmark",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -319,7 +358,6 @@ fun FindFlashCards() {
 
 @Composable
 fun DeckTitleTextField() {
-
     var text by remember { mutableStateOf("") }
     TextField(
         value = text,
@@ -373,42 +411,7 @@ fun FilterSection(selectedFilterIndex: Int, setIndex: (Int) -> Unit) {
 }
 
 
-@Preview
-@Composable
-fun HomeScreen() {
-    var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
-            ) {
-                Text(
-                    text = "CheggPrep",
-                    style = MaterialTheme.typography.h5,
-                    color = DeepOrange,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                FilterSection(selectedFilterIndex, setFilterIndex)
-            }
-        }
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            repeat(20) {
-                item {
-                    DeckItem()
-                }
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
+
 
 @Composable
 fun CardItemField() {
