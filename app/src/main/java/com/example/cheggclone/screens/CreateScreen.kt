@@ -37,6 +37,7 @@ fun CreateScreen() {
                         )
                     }
                 },
+                // TopAppBar에 아이콘 추가 (왼쪽)
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
@@ -45,8 +46,10 @@ fun CreateScreen() {
                         )
                     }
                 },
+                // TopAppBar에 아이콘 추가 (오른쪽)
                 actions = {
-                    TextButton(onClick = { /*TODO*/ }) {
+                    // TextButton 함수는 원래 있는 함수
+                    TextButton(onClick = { /*TODO*/ }, enabled = deckTitle.isNotBlank() ) {
                         Text(
                             "Next",
                             style = MaterialTheme.typography.h6,

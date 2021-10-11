@@ -82,19 +82,17 @@ fun SearchScreen() {
 fun FindFlashCards(onClick: () -> Unit) {
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .clip(CircleShape)
             .border(1.dp, Color.LightGray, CircleShape)
             .clickable(onClick = onClick)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+            .padding(horizontal = 8.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Default.Search,
-            contentDescription = null,
-            tint = Color.Gray,
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 16.dp)
+            contentDescription = "search flashcards",
+            tint = Color.Gray
         )
         Text(
             text = " Find flashcards",
