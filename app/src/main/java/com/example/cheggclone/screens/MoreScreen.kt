@@ -15,12 +15,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.cheggclone.ui.theme.DeepOrange
 import com.example.cheggclone.ui.theme.LightOrange
 
-@Preview
 @Composable
-fun MoreScreen() {
+fun MoreScreen(navController: NavHostController) {
     val (notification, unNotification) = remember { mutableStateOf(true) }
 
     Scaffold(

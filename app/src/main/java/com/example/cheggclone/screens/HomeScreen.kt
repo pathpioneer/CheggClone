@@ -23,10 +23,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.cheggclone.models.DECK_ADDED
 import com.example.cheggclone.models.DECK_CREATED
 import com.example.cheggclone.models.Deck
 import com.example.cheggclone.models.SampleDataSet
+import com.example.cheggclone.navigation.Screen
 import com.example.cheggclone.ui.theme.DeepOrange
 
 @Composable
@@ -58,7 +61,7 @@ fun FilterText(text: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
+fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) { // 오타
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -66,7 +69,7 @@ fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
                 width = 2.dp,
                 color = Color.LightGray
             )
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
         Text(
@@ -81,14 +84,14 @@ fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
         ) {
             Text(
                 text = deck.cardList.size.toString() +
-                        if(deck.cardList.size > 1) " Cards" else " Card",
+                        if (deck.cardList.size > 1) " Cards" else " Card",
                 style = MaterialTheme.typography.subtitle1,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray
             )
-            when(deck.deckType) {
+            when (deck.deckType) {
                 DECK_CREATED -> {
-                    if(deck.shared) {
+                    if (deck.shared) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
                             contentDescription = "shared",
@@ -103,7 +106,7 @@ fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
                     }
                 }
                 DECK_ADDED -> {
-                    if(deck.bookmarked) {
+                    if (deck.bookmarked) {
                         Icon(
                             imageVector = Icons.Default.Bookmark,
                             contentDescription = "bookmark",
@@ -118,14 +121,16 @@ fun DeckItem(deck: Deck, modifier : Modifier = Modifier) { // 오타
 
 @Composable
 fun MakeMyDeck(onClick: () -> Unit) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .border(
-            width = 2.dp,
-            color = Color.LightGray
-        )
-        .clickable(onClick = onClick)
-        .padding(20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 2.dp,
+                color = Color.LightGray
+            )
+            .clickable(onClick = onClick)
+            .padding(20.dp)
+    ) {
         Text(
             text = "Make your own cards",
             style = MaterialTheme.typography.h5,
@@ -157,7 +162,7 @@ fun MakeMyDeck(onClick: () -> Unit) {
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
@@ -177,24 +182,30 @@ fun HomeScreen() {
         }
     ) {
         LazyColumn(modifier = Modifier.padding(16.dp)) {
-            when(selectedFilterIndex) {
+            when (selectedFilterIndex) {
                 0 -> SampleDataSet.deckSample.forEach {
                     item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
                     }
                 }
-                1 -> SampleDataSet.deckSample.filter {it.bookmarked}.forEach {
+                1 -> SampleDataSet.deckSample.filter { it.bookmarked }.forEach {
                     item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
                     }
                 }
-                2 -> SampleDataSet.deckSample.filter {it.deckType == DECK_CREATED}.forEach {
+                2 -> SampleDataSet.deckSample.filter { it.deckType == DECK_CREATED }.forEach {
                     item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp))
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
                     }
                 }
             }
-            item { MakeMyDeck(onClick= { } ) }
+            item { MakeMyDeck(onClick = { navController.navigate(Screen.Create.route) }) }
         }
     }
 }

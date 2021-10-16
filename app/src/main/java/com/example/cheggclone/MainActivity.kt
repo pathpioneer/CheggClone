@@ -10,9 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -20,20 +17,17 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.cheggclone.models.DECK_ADDED
-import com.example.cheggclone.models.DECK_CREATED
-import com.example.cheggclone.models.Deck
-import com.example.cheggclone.models.SampleDataSet
-import com.example.cheggclone.screens.DeckItem
-import com.example.cheggclone.screens.FilterSection
-import com.example.cheggclone.screens.HomeScreen
-import com.example.cheggclone.screens.MakeMyDeck
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.cheggclone.navigation.BottomNavigationBar
+import com.example.cheggclone.navigation.Screen
+import com.example.cheggclone.screens.*
+import com.example.cheggclone.ui.theme.CheggCloneTheme
 import com.example.cheggclone.ui.theme.DeepOrange
 
 
@@ -41,7 +35,43 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeScreen()
+            CheggCloneTheme {
+                val navController = rememberNavController()
+                val (bottomBarShown, showBottomBar) = remember { mutableStateOf(true) }
+
+                Scaffold(
+                    bottomBar = {
+                        if(bottomBarShown) {
+                            BottomNavigationBar(navController = navController)
+                        }
+                    }
+                ) {
+                    NavHost(navController = navController, startDestination = Screen.Home.route) {
+                        composable(Screen.Home.route) {
+                            showBottomBar(true)
+                            HomeScreen(navController)
+                        }
+                        composable(Screen.Search.route) {
+                            showBottomBar(true)
+                            SearchScreen(navController)
+                        }
+                        composable(Screen.Create.route) {
+                            showBottomBar(false)
+                            CreateScreen(navController)
+                        }
+                        composable(Screen.More.route) {
+                            showBottomBar(true)
+                            MoreScreen(navController)
+                        }
+                        composable(Screen.Deck.route + "/{deckTitle}/{cardsNum}") { backStackEntry ->
+                            val deckTitle = backStackEntry.arguments?.getString("deckTitle") ?: "invalid card"
+                            val cardNum = backStackEntry.arguments?.getString("cardsNum")?.toInt() ?: 0
+                            showBottomBar(false)
+                            DeckScreen(navController = navController, title = deckTitle, cardsNum = cardNum)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -146,29 +176,7 @@ fun MyDeckItem() {
 }
 
 
-@Composable
-fun CardItem() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(width = 2.dp, color = Color.LightGray)
-    ) {
-        Text(
-            text = "Operating Systems",
-            modifier = Modifier.padding(16.dp),
-            fontWeight = FontWeight.ExtraBold
-        )
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .height(2.dp), color = Color.LightGray)
-        Text(
-            text = "A request to execute an OS service-layer function",
-            modifier = Modifier.padding(16.dp),
-            color = Color.Gray,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
+
 
 
 @Composable
