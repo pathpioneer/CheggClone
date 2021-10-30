@@ -33,6 +33,55 @@ import com.example.cheggclone.navigation.Screen
 import com.example.cheggclone.ui.theme.DeepOrange
 
 @Composable
+fun HomeScreen(navController: NavHostController) {
+    var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
+            ) {
+                Text(
+                    text = "CheggPrep",
+                    style = MaterialTheme.typography.h5,
+                    color = DeepOrange,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                FilterSection(selectedFilterIndex, setFilterIndex)
+            }
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
+            when (selectedFilterIndex) {
+                0 -> SampleDataSet.deckSample.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
+                    }
+                }
+                1 -> SampleDataSet.deckSample.filter { it.bookmarked }.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
+                    }
+                }
+                2 -> SampleDataSet.deckSample.filter { it.deckType == DECK_CREATED }.forEach {
+                    item {
+                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
+                        }
+                    }
+                }
+            }
+            item { MakeMyDeck(onClick = { navController.navigate(Screen.Create.route) }) }
+        }
+    }
+}
+
+@Composable
 fun FilterSection(selectedFilterIndex: Int, setIndex: (Int) -> Unit) {
     Row() {
         FilterText("All", selectedFilterIndex == 0) { setIndex(0) }
@@ -61,7 +110,7 @@ fun FilterText(text: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) { // 오타
+fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -161,51 +210,3 @@ fun MakeMyDeck(onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun HomeScreen(navController: NavHostController) {
-    var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
-            ) {
-                Text(
-                    text = "CheggPrep",
-                    style = MaterialTheme.typography.h5,
-                    color = DeepOrange,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                FilterSection(selectedFilterIndex, setFilterIndex)
-            }
-        }
-    ) {
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
-            when (selectedFilterIndex) {
-                0 -> SampleDataSet.deckSample.forEach {
-                    item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
-                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
-                        }
-                    }
-                }
-                1 -> SampleDataSet.deckSample.filter { it.bookmarked }.forEach {
-                    item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
-                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
-                        }
-                    }
-                }
-                2 -> SampleDataSet.deckSample.filter { it.deckType == DECK_CREATED }.forEach {
-                    item {
-                        DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
-                            navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
-                        }
-                    }
-                }
-            }
-            item { MakeMyDeck(onClick = { navController.navigate(Screen.Create.route) }) }
-        }
-    }
-}
