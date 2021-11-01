@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.compose.NavHost
@@ -36,7 +37,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CheggCloneTheme {
+                /*
+                navContoller는 가장 밖에 선언되어 있음
+                => 다른 하위 함수들에 대해서 인자로 활용할 수 있음
+                => state hoisting
+                 */
+
+                /*
+                navController 선언 - 주된 목적은 keep track of backstate state
+                onCreate() 밖에서 lateinit var로 선언할 수 있음
+                */
                 val navController = rememberNavController()
+
+                /*
+                Boolean타입의 bottomBarShown 변수 선언, 기본값은 true
+                BottomBar가 보이지 않는 스크린이 있기 때문에 선언
+                 */
                 val (bottomBarShown, showBottomBar) = remember { mutableStateOf(true) }
 
                 Scaffold(
@@ -46,7 +62,17 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
+
+                    /*
+                    NavHost 선언 - 주된 목적은 define navigation graph
+                    startDestination을 통해 처음 보여질 화면을 선택할 수 있음
+                    Screen.Home.route - Screen 클래스의 Home 인스턴스의 route(navigation.kt에 선언)
+                     */
                     NavHost(navController = navController, startDestination = Screen.Home.route) {
+                        /*
+                        Screen 클래스의 Home 인스턴스의 route를 가진 컴포저블 또는 스크린
+                        화면의 BottomBar는 보이게 설정
+                         */
                         composable(Screen.Home.route) {
                             showBottomBar(true)
                             HomeScreen(navController)
@@ -55,6 +81,13 @@ class MainActivity : ComponentActivity() {
                             showBottomBar(true)
                             SearchScreen(navController)
                         }
+
+                        /*
+                        Screen 클래스의 Create 인스턴스의 route를 가진 컴포저블 또는 스크린
+                        화면의 BottomBar는 보이지 않도록 설정
+                        showBottomBar(false)선언 시 recomposition이 되면서 Scaffold의 조건문이 다시 작동
+                        => false가 되었기 때문에 BottomBar는 보이지 않음
+                         */
                         composable(Screen.Create.route) {
                             showBottomBar(false)
                             CreateScreen(navController)
@@ -66,7 +99,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Deck.route + "/{deckTitle}/{cardsNum}") { backStackEntry ->
                             val deckTitle = backStackEntry.arguments?.getString("deckTitle") ?: "invalid card"
                             val cardNum = backStackEntry.arguments?.getString("cardsNum")?.toInt() ?: 0
-                            showBottomBar(false)
+                            showBottomBar(false) // BottomBar 보이지 않도록 설정
                             DeckScreen(navController = navController, title = deckTitle, cardsNum = cardNum)
                         }
                     }
@@ -75,7 +108,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 
 @Composable
@@ -177,8 +209,6 @@ fun MyDeckItem() {
 
 
 
-
-
 @Composable
 fun CardItemField() {
     val (frontText, setFrontText) = remember { mutableStateOf("")}
@@ -196,7 +226,7 @@ fun CardItemField() {
                 onValueChange = setFrontText,
                 modifier = Modifier
                     .constrainAs(front) {
-                        top.linkTo(parent.top) //자신의 top을 parent의 top에 배치한다
+                        top.linkTo(parent.top) //자신의 top을 parent의 top에 배치
                     }
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -232,7 +262,7 @@ fun CardItemField() {
                 onValueChange = setBackText,
                 modifier = Modifier
                     .constrainAs(front) {
-                        top.linkTo(divider.bottom) //자신의 top을 parent의 top에 배치한다
+                        top.linkTo(divider.bottom) //자신의 top을 parent의 top에 배치
                     }
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -267,7 +297,6 @@ fun CardItemField() {
 }
 
 
-// Sample
 @Composable
 fun sample() {
     var sizeState by remember { mutableStateOf(200.dp) }
@@ -283,10 +312,10 @@ fun sample() {
         .size(size)
         .background(Color.Red),
         contentAlignment = Alignment.Center) {
-            Button(onClick = {
-                sizeState += 50.dp
-            }) {
-                Text("Increase Size")
-            }
+        Button(onClick = {
+            sizeState += 50.dp
+        }) {
+            Text("Increase Size")
         }
+    }
 }

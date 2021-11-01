@@ -21,6 +21,8 @@ import com.example.cheggclone.ui.theme.LightOrange
 
 @Composable
 fun MoreScreen(navController: NavHostController) {
+    // Push notifications 상태 변수 저장
+    // default는 true(switch on)
     val (notification, unNotification) = remember { mutableStateOf(true) }
 
     Scaffold(
@@ -50,12 +52,12 @@ fun MoreScreen(navController: NavHostController) {
 
             AccountSection(
                 name = "GDSC",
-                signOut = {},
+                signOut = {  },
                 modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
             )
             Divider()
             Row(
-                modifier = notClickableModifier,
+                modifier = notClickableModifier, // 앞서 선언한 custom modifier 적용
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 MoreItem(
@@ -64,7 +66,7 @@ fun MoreScreen(navController: NavHostController) {
                     text = "Push notifications"
                 )
                 Switch(
-                    checked = notification,
+                    checked = notification, // default: true
                     onCheckedChange = unNotification,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = DeepOrange,
@@ -73,7 +75,6 @@ fun MoreScreen(navController: NavHostController) {
                 )
             }
             Divider()
-
             Row(modifier = Modifier.moreModifier { }) {
                 MoreItem(
                     icon = Icons.Outlined.Feedback,
@@ -90,7 +91,7 @@ fun MoreScreen(navController: NavHostController) {
                 )
             }
             Row(
-                modifier = Modifier.moreModifier { },
+                modifier = Modifier.moreModifier { }, // 아래에서 선언한 extended 함수 적용
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 MoreItem(
@@ -138,6 +139,8 @@ fun MoreScreen(navController: NavHostController) {
     }
 }
 
+// 프로필 이미지, 이메일이 보여지는 section
+// 누가 로그인을 하냐에 따라 달라지므로 인자를 받아서 사용
 @Composable
 fun AccountSection(
     name: String,
@@ -170,11 +173,14 @@ fun AccountSection(
     }
 }
 
+// extended 함수
 fun Modifier.moreModifier(onClick: () -> Unit) = this
     .fillMaxWidth()
     .clickable(onClick = onClick)
     .padding(horizontal = 8.dp, vertical = 12.dp)
 
+
+// 요소들의 layout
 @Composable
 fun MoreItem(
     icon: ImageVector,

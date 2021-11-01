@@ -1,6 +1,7 @@
 package com.example.cheggclone.models
 
 
+// Deck 샘플 목록을 deckSample 변수에 저장
 object SampleDataSet {
     val deckSample = listOf(
         Deck(

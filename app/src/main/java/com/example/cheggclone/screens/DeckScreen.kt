@@ -21,14 +21,22 @@ import androidx.navigation.NavController
 import com.example.cheggclone.models.Card
 import com.example.cheggclone.ui.theme.DeepOrange
 
+/*
+Bottom Bar navigation 화면이 아닌
+HomeScreen에서 Deck set 하나를 클릭했을 때 나오는 화면
+Bottom Bar는 보이지 않도록 해야 함
+*/
 @Composable
 fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
     Scaffold(topBar = {
         TopAppBar(
-            elevation = 0.dp,
+            elevation = 0.dp, // 그림자 효과
             backgroundColor = Color.White,
             title = { Text(title) },
+            // 상단 왼쪽 [<-] 버튼
             navigationIcon = {
+                // [<-] 버튼 클릭 시 뒤로가기 구현
+                // stack에서 가장 위의 화면을 가져와서 현재의 화면에 보여줌(pop)
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -36,6 +44,7 @@ fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
                     )
                 }
             },
+            // 상단 오른쪽 공유버튼, 옵션버튼
             actions = {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(imageVector = Icons.Default.Share, contentDescription = "share")
@@ -47,6 +56,7 @@ fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
         )
 
     }, bottomBar = {
+        // Bottom Bar가 투명해 보이지 않도록 color를 white로 설정
         Column(modifier = Modifier.background(Color.White)) {
             Divider(modifier = Modifier.height(2.dp), color = Color.LightGray)
             Row(
@@ -73,8 +83,10 @@ fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
             }
         }
     }) {
+        // top bar, bottom bar를 제외한 내용물들에 대한 선언
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
+                // 카드의 개수가 1개가 넘으면 Cards로, 1개일 경우 Card로 표기
                 text = cardsNum.toString() + if (cardsNum > 1) "Cards" else "Card",
                 color = Color.Gray
             )
@@ -88,6 +100,7 @@ fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
 
 }
 
+// 하나의 Card Item Composable
 @Composable
 fun CardItem(card: Card) {
     Column(

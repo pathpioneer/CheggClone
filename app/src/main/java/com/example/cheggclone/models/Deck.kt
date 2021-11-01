@@ -2,6 +2,7 @@ package com.example.cheggclone.models
 
 import com.example.cheggclone.models.Card
 
+// Deck(card set) 하나에 대한 정보를 담은 data class
 data class Deck(
     val deckType: Int,
     val deckTitle: String,

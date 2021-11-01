@@ -14,13 +14,15 @@ import androidx.navigation.NavHostController
 import com.example.cheggclone.ui.theme.DeepOrange
 import com.example.cheggclone.ui.theme.LightOrange
 
+// navController를 사용할 예정이니 navController를 인자로 받아야 함 (상단 왼쪽의 X버튼, 상단 오르쪽의 Next버튼)
 @Composable
 fun CreateScreen(navController: NavHostController) {
 
-    val (deckTitle, setDeckTitle) = remember { mutableStateOf("") }
-    val (visibility, setVisibility) = remember { mutableStateOf(true) }
+    val (deckTitle, setDeckTitle) = remember { mutableStateOf("") } // Deck title
+    val (visibility, setVisibility) = remember { mutableStateOf(true) } // Bottom bar visibility
 
     Scaffold(
+        // Top Bar에는 세 개의 아이템을 배치
         topBar = {
             TopAppBar(
                 elevation = 0.dp,
@@ -39,6 +41,7 @@ fun CreateScreen(navController: NavHostController) {
                 },
                 // TopAppBar에 아이콘 추가 (왼쪽)
                 navigationIcon = {
+                    // 작업이 취소되고 이전의 화면으로 이동해야 함(아직 미구현)
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
@@ -49,6 +52,8 @@ fun CreateScreen(navController: NavHostController) {
                 // TopAppBar에 아이콘 추가 (오른쪽)
                 actions = {
                     // TextButton 함수는 원래 있는 함수
+                    // 작업된 데이터를 저장하고 반영해야 함(아직 미구현)
+                    // deck title이 비어있지 않으면 enabled 됨
                     TextButton(onClick = { /*TODO*/ }, enabled = deckTitle.isNotBlank() ) {
                         Text(
                             "Next",
@@ -61,6 +66,7 @@ fun CreateScreen(navController: NavHostController) {
 
         }
     ) {
+        // 화면의 절반을 사용해서 그 밑부분에 요소들 배치
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,6 +99,7 @@ fun CreateScreen(navController: NavHostController) {
     }
 }
 
+// Text Field
 @Composable
 fun DeckTitleTextField(text: String, setText: (String) -> Unit) {
     TextField(
@@ -100,7 +107,7 @@ fun DeckTitleTextField(text: String, setText: (String) -> Unit) {
         onValueChange = setText,
         modifier = Modifier.fillMaxWidth(),
         textStyle = MaterialTheme.typography.h4,
-        placeholder = {
+        placeholder = {     // TextField hint
             Text(
                 text = " Untitled deck",
                 style = MaterialTheme.typography.h4,

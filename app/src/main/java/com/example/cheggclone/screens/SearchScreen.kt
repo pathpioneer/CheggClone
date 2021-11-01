@@ -23,6 +23,7 @@ import com.example.cheggclone.ui.theme.DeepOrange
 @Composable
 fun SearchScreen(navController: NavHostController) {
     Scaffold(
+        // 다른 부분에 comment가 있어서 생략
         topBar = {
             TopAppBar(
                 elevation = 0.dp,
@@ -69,6 +70,8 @@ fun SearchScreen(navController: NavHostController) {
                 style = MaterialTheme.typography.h6
             )
             Spacer(modifier = Modifier.height(16.dp))
+            // repeat 아래의 코드를 7번 반복
+            // 7개의 요소 배치(추후 수정)
             repeat(7) {
                 SubjectItem()
                 Spacer(modifier = Modifier.height(8.dp))
@@ -77,6 +80,7 @@ fun SearchScreen(navController: NavHostController) {
     }
 }
 
+// Flash Card 검색창
 @Composable
 fun FindFlashCards(onClick: () -> Unit) {
     Row(
@@ -101,6 +105,7 @@ fun FindFlashCards(onClick: () -> Unit) {
     }
 }
 
+// Flack Card 하나의 요소 composable
 @Composable
 fun SubjectItem() {
     Row(

@@ -32,8 +32,10 @@ import com.example.cheggclone.models.SampleDataSet
 import com.example.cheggclone.navigation.Screen
 import com.example.cheggclone.ui.theme.DeepOrange
 
+// 가장 처음으로 보여지는 화면(start destination)
 @Composable
 fun HomeScreen(navController: NavHostController) {
+
     var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
@@ -57,10 +59,16 @@ fun HomeScreen(navController: NavHostController) {
                 0 -> SampleDataSet.deckSample.forEach {
                     item {
                         DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
+                            /*
+                            아래 코드는 DeckItem Composable의 마지막 인자인 onclick 함수
+                            DeckItem 클릭 시 인자와 함께 [Screen클래스의 Deck인스턴스의 route + 전달할 인자 route]로 이동
+                            전달할 인자는 deckTitle과 cardList의 size
+                             */
                             navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
                         }
                     }
                 }
+                // bookmarked된 아이템들에 대해서만 적용
                 1 -> SampleDataSet.deckSample.filter { it.bookmarked }.forEach {
                     item {
                         DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
@@ -84,6 +92,7 @@ fun HomeScreen(navController: NavHostController) {
 @Composable
 fun FilterSection(selectedFilterIndex: Int, setIndex: (Int) -> Unit) {
     Row() {
+        // filter index가 자신의 index일 경우 true를 넘겨줘서 filter의 색을 바꿈
         FilterText("All", selectedFilterIndex == 0) { setIndex(0) }
         Spacer(modifier = Modifier.width(8.dp))
         FilterText("Bookmarks", selectedFilterIndex == 1) { setIndex(1) }
@@ -92,6 +101,7 @@ fun FilterSection(selectedFilterIndex: Int, setIndex: (Int) -> Unit) {
     }
 }
 
+// 세 개의 필터 전부가 아닌 하나의 필터에 대한 composable
 @Composable
 fun FilterText(text: String, selected: Boolean, onClick: () -> Unit) {
     Row(
@@ -109,6 +119,7 @@ fun FilterText(text: String, selected: Boolean, onClick: () -> Unit) {
     }
 }
 
+// 하나의 Deck에 대한 layout
 @Composable
 fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
@@ -139,21 +150,23 @@ fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) {
                 color = Color.Gray
             )
             when (deck.deckType) {
+                // deckType이 0일 때
                 DECK_CREATED -> {
                     if (deck.shared) {
                         Icon(
-                            imageVector = Icons.Default.Visibility,
+                            imageVector = Icons.Default.Visibility, // 공유 deck일 경우 아이콘
                             contentDescription = "shared",
                             tint = Color.Gray
                         )
                     } else {
                         Icon(
-                            imageVector = Icons.Default.VisibilityOff,
+                            imageVector = Icons.Default.VisibilityOff, // 공유 deck이 아닐 경우 아이콘
                             contentDescription = "not shared",
                             tint = Color.Gray
                         )
                     }
                 }
+                // deckType이 1일 때
                 DECK_ADDED -> {
                     if (deck.bookmarked) {
                         Icon(
@@ -168,6 +181,7 @@ fun DeckItem(deck: Deck, modifier: Modifier = Modifier, onClick: () -> Unit) {
     }
 }
 
+// 모든 Deck 밑에 들어가는 요소
 @Composable
 fun MakeMyDeck(onClick: () -> Unit) {
     Column(
@@ -209,4 +223,5 @@ fun MakeMyDeck(onClick: () -> Unit) {
         }
     }
 }
+
 
