@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.cheggclone.models.DECK_ADDED
 import com.example.cheggclone.models.DECK_CREATED
@@ -31,10 +30,11 @@ import com.example.cheggclone.models.Deck
 import com.example.cheggclone.models.SampleDataSet
 import com.example.cheggclone.navigation.Screen
 import com.example.cheggclone.ui.theme.DeepOrange
+import com.example.cheggclone.viewmodel.CheggViewModel
 
 // 가장 처음으로 보여지는 화면(start destination)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, viewModel: CheggViewModel) {
 
     var (selectedFilterIndex, setFilterIndex) = remember { mutableStateOf(0) }
     Scaffold(
@@ -56,7 +56,7 @@ fun HomeScreen(navController: NavHostController) {
     ) {
         LazyColumn(modifier = Modifier.padding(16.dp)) {
             when (selectedFilterIndex) {
-                0 -> SampleDataSet.deckSample.forEach {
+                0 -> viewModel.myDeckList.forEach {
                     item {
                         DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
                             /*
@@ -69,14 +69,14 @@ fun HomeScreen(navController: NavHostController) {
                     }
                 }
                 // bookmarked된 아이템들에 대해서만 적용
-                1 -> SampleDataSet.deckSample.filter { it.bookmarked }.forEach {
+                1 -> viewModel.myDeckList.filter { it.bookmarked }.forEach {
                     item {
                         DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
                             navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")
                         }
                     }
                 }
-                2 -> SampleDataSet.deckSample.filter { it.deckType == DECK_CREATED }.forEach {
+                2 -> viewModel.myDeckList.filter { it.deckType == DECK_CREATED }.forEach {
                     item {
                         DeckItem(deck = it, modifier = Modifier.padding(bottom = 8.dp)) {
                             navController.navigate(Screen.Deck.route + "/${it.deckTitle}/${it.cardList.size}")

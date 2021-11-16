@@ -13,14 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cheggclone.ui.theme.DeepOrange
 import com.example.cheggclone.ui.theme.LightOrange
+import com.example.cheggclone.viewmodel.CheggViewModel
 
 @Composable
-fun MoreScreen(navController: NavHostController) {
+fun MoreScreen(navController: NavHostController, cheggViewModel: CheggViewModel) {
     // Push notifications 상태 변수 저장
     // default는 true(switch on)
     val (notification, unNotification) = remember { mutableStateOf(true) }

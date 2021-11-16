@@ -19,6 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.example.cheggclone.ui.theme.DeepOrange
 import com.example.cheggclone.ui.theme.LightOrange
+import com.example.cheggclone.viewmodel.CheggViewModel
 
 enum class CreateState {
     TitleScreen,
@@ -33,7 +34,7 @@ fun abc() {
 
 // navController를 사용할 예정이니 navController를 인자로 받아야 함 (상단 왼쪽의 X버튼, 상단 오르쪽의 Next버튼)
 @Composable
-fun CreateScreen(navController: NavHostController) {
+fun CreateScreen(navController: NavHostController, cheggViewModel: CheggViewModel) {
 
     val (deckTitle, setDeckTitle) = remember { mutableStateOf("") } // Deck title
     val (visibility, setVisibility) = remember { mutableStateOf(true) } // Bottom bar visibility

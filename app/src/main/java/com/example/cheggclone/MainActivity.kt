@@ -13,15 +13,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,7 +27,7 @@ import com.example.cheggclone.navigation.BottomNavigationBar
 import com.example.cheggclone.navigation.Screen
 import com.example.cheggclone.screens.*
 import com.example.cheggclone.ui.theme.CheggCloneTheme
-import com.example.cheggclone.ui.theme.DeepOrange
+import com.example.cheggclone.viewmodel.CheggViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -48,6 +46,8 @@ class MainActivity : ComponentActivity() {
                 onCreate() 밖에서 lateinit var로 선언할 수 있음
                 */
                 val navController = rememberNavController()
+
+                val cheggViewModel : CheggViewModel = viewModel()
 
                 /*
                 Boolean타입의 bottomBarShown 변수 선언, 기본값은 true
@@ -75,11 +75,11 @@ class MainActivity : ComponentActivity() {
                          */
                         composable(Screen.Home.route) {
                             showBottomBar(true)
-                            HomeScreen(navController)
+                            HomeScreen(navController, cheggViewModel)
                         }
                         composable(Screen.Search.route) {
                             showBottomBar(true)
-                            SearchScreen(navController)
+                            SearchScreen(navController, cheggViewModel)
                         }
 
                         /*
@@ -90,17 +90,17 @@ class MainActivity : ComponentActivity() {
                          */
                         composable(Screen.Create.route) {
                             showBottomBar(false)
-                            CreateScreen(navController)
+                            CreateScreen(navController, cheggViewModel)
                         }
                         composable(Screen.More.route) {
                             showBottomBar(true)
-                            MoreScreen(navController)
+                            MoreScreen(navController, cheggViewModel)
                         }
                         composable(Screen.Deck.route + "/{deckTitle}/{cardsNum}") { backStackEntry ->
                             val deckTitle = backStackEntry.arguments?.getString("deckTitle") ?: "invalid card"
                             val cardNum = backStackEntry.arguments?.getString("cardsNum")?.toInt() ?: 0
                             showBottomBar(false) // BottomBar 보이지 않도록 설정
-                            DeckScreen(navController = navController, title = deckTitle, cardsNum = cardNum)
+                            DeckScreen(navController = navController, title = deckTitle, cardsNum = cardNum, cheggViewModel)
                         }
                     }
                 }

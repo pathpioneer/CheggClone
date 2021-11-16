@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cheggclone.models.Card
 import com.example.cheggclone.ui.theme.DeepOrange
+import com.example.cheggclone.viewmodel.CheggViewModel
 
 /*
 Bottom Bar navigation 화면이 아닌
@@ -27,7 +28,12 @@ HomeScreen에서 Deck set 하나를 클릭했을 때 나오는 화면
 Bottom Bar는 보이지 않도록 해야 함
 */
 @Composable
-fun DeckScreen(navController: NavController, title: String, cardsNum: Int) {
+fun DeckScreen(
+    navController: NavController,
+    title: String,
+    cardsNum: Int,
+    cheggViewModel: CheggViewModel
+) {
     Scaffold(topBar = {
         TopAppBar(
             elevation = 0.dp, // 그림자 효과
