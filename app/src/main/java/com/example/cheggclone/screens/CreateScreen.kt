@@ -26,13 +26,6 @@ enum class CreateState {
     CardScreen
 }
 
-@Preview(showBackground = true)
-@Composable
-fun abc() {
-    CreateCardScreen({ }, { })
-}
-
-// navController를 사용할 예정이니 navController를 인자로 받아야 함 (상단 왼쪽의 X버튼, 상단 오르쪽의 Next버튼)
 @Composable
 fun CreateScreen(navController: NavHostController, cheggViewModel: CheggViewModel) {
 
@@ -58,8 +51,6 @@ fun CreateScreen(navController: NavHostController, cheggViewModel: CheggViewMode
             )
         }
     }
-
-
 }
 
 @Composable
