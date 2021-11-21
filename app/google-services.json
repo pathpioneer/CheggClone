@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "590883482348",
+    "project_id": "cheggclone",
+    "storage_bucket": "cheggclone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590883482348:android:3b87fb14c7d784760093c9",
+        "android_client_info": {
+          "package_name": "com.example.cheggclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590883482348-bj37ju1tcp1935mtoa1if2m8e3uq0h0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZK3iblDWeUBKHIbOil56ms-3IWgU_g5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590883482348-bj37ju1tcp1935mtoa1if2m8e3uq0h0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

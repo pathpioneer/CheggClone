@@ -11,21 +11,13 @@ import com.example.cheggclone.models.SampleDataSet
 import java.util.*
 
 class CheggViewModel : ViewModel() {
+
     var myDeckList = mutableStateListOf<Deck>()
         private set
 
-    var totalDeckList = mutableStateListOf<Deck>()
-        private set
-
+    // SearchScreen ////////////////////////
     var searchScreenState = mutableStateOf(SearchState.ButtonScreen)
         private set
-
-    var queryString = mutableStateOf("")
-        private set
-
-    fun setQueryString(query: String) {
-        queryString.value = query
-    }
 
     fun toButtonScreen() {
         searchScreenState.value = SearchState.ButtonScreen
@@ -39,12 +31,33 @@ class CheggViewModel : ViewModel() {
         searchScreenState.value = SearchState.ResultScreen
     }
 
-    fun getQueryResult() =
-         totalDeckList.filter{ deck ->
-            deck.deckTitle.lowercase(Locale.getDefault()).contains(queryString.value.lowercase())
-        }.toMutableStateList()
+    var queryString = mutableStateOf("")
+        private set
+
+    fun setQueryString(query: String) {
+        queryString.value = query
+    }
+
+    // 전체 Deck
+    var totalDeckList = mutableStateListOf<Deck>()
+        private set
+
+    // Deck 검색 결과 반환
+    fun getQueryResult() = totalDeckList.filter { deck ->
+        deck.deckTitle.lowercase(Locale.getDefault())
+            .contains(queryString.value.lowercase(Locale.getDefault()))
+    }.toMutableStateList()
+    /////////////////////////////////
 
 
+    // CreateScreen /////////////////
+    var createScreenState = mutableStateOf(CreateState.TitleScreen)
+        private set
+
+    fun toCardScreen() {
+        createScreenState.value = CreateState.CardScreen
+    }
+    ////////////////////////////////////
     init {
         myDeckList = SampleDataSet.myDeckSample.toMutableStateList()
         totalDeckList = SampleDataSet.totalDeckSample.toMutableStateList()

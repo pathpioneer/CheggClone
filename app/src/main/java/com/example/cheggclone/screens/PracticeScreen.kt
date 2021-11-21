@@ -34,7 +34,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun PracticeScreen() {
     val sampleData = SampleDataSet.myDeckSample[0].cardList // card들 모아놓은 리스트
-    val pagerState = rememberPagerState() // Pager의 상태
+    val pagerState = rememberPagerState() // pager state
     val (count, setCount) = remember { mutableStateOf(0f) } // 현재 카드 수
 
 
@@ -85,7 +85,6 @@ fun PracticeScreen() {
         )
     }
     ) {
-
         Column {
             // 프로그레스바
             Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)) {
@@ -98,7 +97,6 @@ fun PracticeScreen() {
                     contentPadding = PaddingValues(32.dp)
                     // 양쪽에 이전, 다음 카드를 보여줌
                 ) { page ->
-
                     FlipCard(
                         back = {
                             CardBack(text = sampleData[page].back)
@@ -143,6 +141,7 @@ fun ProgressBar(
     )
 }
 
+
 /////////////flip card////////////
 enum class CardFace(val angle: Float) { // 카드 앞, 뒷면 상태
     Front(angle = 0f) { // Front -> angle = 0도
@@ -160,14 +159,6 @@ enum class CardFace(val angle: Float) { // 카드 앞, 뒷면 상태
 enum class RotationAxis {
     AxisX,
     AxisY,
-}
-
-@Composable
-fun CardPreview() {
-    Column(Modifier.padding(16.dp)) {
-        CardFront(text = "Iterations")
-        CardBack(text = "Repeated steps in an SDLC process; for example, in the UP, each iteration, consisting of specific activities")
-    }
 }
 
 @Composable
@@ -205,9 +196,7 @@ fun FlipCard(
     front: @Composable () -> Unit = {},
 ) {
     // 앞,뒷면 상태
-    var cardFace by remember {
-        mutableStateOf(CardFace.Front)
-    }
+    var cardFace by remember { mutableStateOf(CardFace.Front) }
 
     // cardFace의 angle을 animation
     val rotation = animateFloatAsState(
